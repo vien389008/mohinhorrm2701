@@ -13,5 +13,3 @@ interface ResourceModelInterface
     public function showAll();
 
 }
-
-?>

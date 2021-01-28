@@ -18,37 +18,30 @@ class TasksController extends Controller
 
     function create()
     {
-        if (isset($_POST["title"]))
-        {
-            $task= new TaskRepository();
+        if (isset($_POST["title"])) {
+            $task = new TaskRepository();
             $task1 = new TaskModel();
             $task1->setTitle($_POST["title"]);
             $task1->setDescription($_POST["description"]);
 
-            if ($task->add($task1))
-            {
+            if ($task->add($task1)) {
                 header("Location: " . WEBROOT . "tasks/index");
             }
         }
-
         $this->render("create");
     }
 
     function edit($id)
     {
-        $task= new TaskRepository();
+        $task = new TaskRepository();
         $d["task"] = $task->get($id);
-        if (isset($_POST["title"]))
-        {
-            $task1= new TaskModel();
-            
+        if (isset($_POST["title"])) {
+            $task1 = new TaskModel();
+
             $task1->setId($id);
             $task1->setTitle($_POST["title"]);
             $task1->setDescription($_POST["description"]);
-            
-            $task = new TaskRepository();
-            if ($task->edit($task1))
-            {
+            if ($task->edit($task1)) {
                 header("Location: " . WEBROOT . "tasks/index");
             }
         }
@@ -56,15 +49,14 @@ class TasksController extends Controller
         $this->render("edit");
     }
 
-    function delete($id)
+    function delete($model)
     {
+
         $task = new TaskRepository();
         $task1 = new TaskModel();
-        $task1->setId($id);
-        if ($task->delete($task1))
-        {
+        $task1->setId($model);
+        if ($task->delete($task1)) {
             header("Location: " . WEBROOT . "tasks/index");
         }
     }
 }
-?>

@@ -62,6 +62,3 @@ class TaskModel extends Model
         $this->created_at = $created_at;
     }
 }
-
-
-?>

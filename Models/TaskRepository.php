@@ -40,6 +40,3 @@ class TaskRepository
         return $this->taskPepos->save($model);
     }
 }
-
-
-?>

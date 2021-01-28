@@ -5,6 +5,7 @@ namespace MVC\Core;
 use MVC\Core\ResourceModelInterface;
 use MVC\Config\Database;
 use MVC\Models\TaskModel;
+use PDO;
 
 class ResourceModel implements ResourceModelInterface
 {
@@ -21,31 +22,30 @@ class ResourceModel implements ResourceModelInterface
 
     public function save($model)
     {
-        $arrModel= $model->getProperties();
-        $placeholder=[];
-        $insert_key=[];
-        $placeUpdate=[];
-        if ($model->getId()===null){
+        $arrModel = $model->getProperties();
+        $placeholder = [];
+        $insert_key = [];
+        $placeUpdate = [];
+        if ($model->getId() === null) {
             //insert
-            foreach ($arrModel as $key=>$value){
-                $insert_key[] =$key;
-                array_push($placeholder, ':'.$key);
-
+            foreach ($arrModel as $key => $value) {
+                $insert_key[] = $key;
+                array_push($placeholder, ':' . $key);
             }
-            $strKeyIns= implode(', ',$insert_key);
-            $strPlaceholder=implode(', ',$placeholder);
-            $sql_insert="INSERT INTO $this->table ({$strKeyIns}) VALUES ({$strPlaceholder})";
-            $obj_insert =Database::getBdd()->prepare($sql_insert);
+            $strKeyIns = implode(', ', $insert_key);
+            $strPlaceholder = implode(', ', $placeholder);
+            $sql_insert = "INSERT INTO $this->table ({$strKeyIns}) VALUES ({$strPlaceholder})";
+            $obj_insert = Database::getBdd()->prepare($sql_insert);
             return $obj_insert->execute($arrModel);
-        }else{
-            foreach ($arrModel as $k=>$item){
-                array_push($placeUpdate, $k.' = :'.$k);
+        } else {
+            foreach ($arrModel as $k => $item) {
+                array_push($placeUpdate, $k . ' = :' . $k);
             }
             //update
-            $id=$model->getId();
-            $strPlaceUpdate=implode(', ',$placeUpdate);
-            $sql_update="UPDATE {$this->table} SET $strPlaceUpdate WHERE id=" .$id;
-            $obj_update=Database::getBdd()->prepare($sql_update);
+            $id = $model->getId();
+            $strPlaceUpdate = implode(', ', $placeUpdate);
+            $sql_update = "UPDATE {$this->table} SET $strPlaceUpdate WHERE id=" . $id;
+            $obj_update = Database::getBdd()->prepare($sql_update);
             return $obj_update->execute($arrModel);
         }
     }
@@ -53,7 +53,7 @@ class ResourceModel implements ResourceModelInterface
     public function delete($model)
     {
         $id = $model->getId();
-        $sql = "DELETE FROM $this->table WHERE id =".$id;
+        $sql = "DELETE FROM $this->table WHERE id =" . $id;
         $req = Database::getBdd()->prepare($sql);
         return $req->execute();
     }
@@ -63,17 +63,14 @@ class ResourceModel implements ResourceModelInterface
         $sql = "SELECT * FROM $this->table";
         $req = Database::getBdd()->prepare($sql);
         $req->execute();
-        return $req->fetchAll();
+        return $req->fetchAll(PDO::FETCH_OBJ);
     }
 
     public function find($id)
     {
-        $sql = "SELECT * FROM $this->table WHERE id =".$id;
+        $sql = "SELECT * FROM $this->table WHERE id =" . $id;
         $req = Database::getBdd()->prepare($sql);
         $req->execute();
         return $req->fetch();
     }
 }
-
-
-?>
